@@ -1,0 +1,27 @@
+{
+  "name": "root",
+  "private": true,
+  "scripts": {
+    "postinstall": "lerna bootstrap",
+    "deploy:be": "lerna run --stream --scope backend deploy",
+    "deploy:fe": "lerna run --scope site deploy",
+    "start": "lerna run --stream --scope site start",
+    "lint": "lerna run lint --"
+  },
+  "devDependencies": {
+    "husky": "4.2.5",
+    "lerna": "3.21.0",
+    "lint-staged": "10.2.4",
+    "prettier": "2.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write"
+    ]
+  }
+}

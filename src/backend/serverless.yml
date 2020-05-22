@@ -1,0 +1,62 @@
+org: cedmax
+app: img-threads
+service: imgthreads
+
+provider:
+  name: aws
+  region: eu-west-1
+  runtime: nodejs12.x
+  iamRoleStatements:
+    - Effect: 'Allow'
+      Action:
+        - 's3:PutObject'
+        - 's3:PutObjectAcl'
+        - 's3:getObject'
+        - 's3:PutObjectAcl'
+      Resource:
+        - 'arn:aws:s3:::img-threads-uploads'
+        - 'arn:aws:s3:::img-threads-uploads/*'
+        - 'arn:aws:s3:::img-threads'
+        - 'arn:aws:s3:::img-threads/*'
+  s3:
+    uploadBucket:
+      name: img-threads-uploads
+      AccessControl: BucketOwnerFullControl
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT]
+            AllowedOrigins: ['*']
+    destinationBucket:
+      name: img-threads
+      AccessControl: PublicRead
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders: ['*']
+            AllowedMethods: [GET, PUT]
+            AllowedOrigins: ['*']
+
+functions:
+  upload:
+    handler: uploader.handler
+    events:
+      - http:
+          path: upload
+          method: post
+          cors: true
+  resize:
+    handler: resizer.handler
+    layers:
+      - arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2
+    events:
+      - s3:
+          bucket: uploadBucket
+          event: s3:ObjectCreated:*
+  associate:
+    handler: firebase.handler
+    events:
+      - s3:
+          bucket: destinationBucket
+          event: s3:ObjectCreated:*
+          rules:
+            - prefix: r/

@@ -1,0 +1,19 @@
+{
+  "name": "backend",
+  "version": "1.1.2",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "deploy": "serverless deploy",
+    "lint": "eslint \"*.js\""
+  },
+  "dependencies": {
+    "aws-sdk": "2.682.0",
+    "firebase-admin": "8.12.1",
+    "gm": "1.23.1",
+    "uuid": "8.1.0"
+  },
+  "devDependencies": {
+    "serverless": "1.71.3"
+  }
+}
