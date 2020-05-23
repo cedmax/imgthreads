@@ -1,0 +1,7 @@
+{
+  "bucket": "img-threads-dev",
+  "databaseURL": "https://ifeeltired.firebaseio.com",
+  "databasePath": "dev",
+  "dynamoTable": "captions-dev",
+  "corsDomain": "*"
+}

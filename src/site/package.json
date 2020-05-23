@@ -17,8 +17,8 @@
     "uppload": "^3.2.0"
   },
   "scripts": {
-    "start": "REACT_APP_STAGE=dev PORT=80 react-scripts start",
-    "build": "REACT_APP_STAGE=production react-scripts build",
+    "start": "REACT_APP_ENV=dev react-scripts start",
+    "build": "REACT_APP_ENV=prod react-scripts build",
     "deploy": "yarn build && netlify deploy --dir=build"
   },
   "eslintConfig": {

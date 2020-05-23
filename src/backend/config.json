@@ -1,5 +1,0 @@
-{
-  "bucket": "img-threads",
-  "databaseURL": "https://ifeeltired.firebaseio.com",
-  "dynamoTable": "caption"
-}

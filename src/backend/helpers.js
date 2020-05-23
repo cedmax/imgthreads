@@ -1,4 +1,4 @@
-const { dynamoTable: TableName } = require('./config.json')
+const { dynamoTable: TableName } = require(`./config.${process.env.ENV}.json`)
 
 module.exports.parseEvent = event => {
   const Record = event.Records[0]

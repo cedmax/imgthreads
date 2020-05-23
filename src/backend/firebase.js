@@ -1,9 +1,13 @@
 'use strict'
+
 const AWS = require('aws-sdk')
 const admin = require('firebase-admin')
-const { databaseURL } = require('./config.json')
 const { parseEvent, readComment } = require('./helpers')
 const serviceAccount = require('./serviceAccountKey.json')
+const {
+  databaseURL,
+  databasePath,
+} = require(`./config.${process.env.ENV}.json`)
 
 const dynamodb = new AWS.DynamoDB()
 
@@ -17,7 +21,9 @@ const fileToDbPath = file => {
   const fileParts = file.split(/[./]/g)
   const isParent = fileParts.length < 4
 
-  return `/${fileParts[1]}/${isParent ? fileParts[1] : fileParts[2]}`
+  return `/${databasePath}/${fileParts[1]}/${
+    isParent ? fileParts[1] : fileParts[2]
+  }`
 }
 const fileToId = file => {
   const fileParts = file.split(/[./]/g)

@@ -1,7 +1,7 @@
 'use strict'
 const AWS = require('aws-sdk')
 const uuid = require('uuid').v4
-const { bucket } = require('./config.json')
+const { bucket, corsDomain } = require(`./config.${process.env.ENV}.json`)
 const { writeComment } = require('./helpers')
 
 const s3 = new AWS.S3({
@@ -29,7 +29,7 @@ module.exports.handler = async event => {
   return {
     statusCode: 200,
     headers: {
-      'Access-Control-Allow-Origin': 'https://imgthreads.com',
+      'Access-Control-Allow-Origin': corsDomain,
     },
     body: JSON.stringify({
       uploadUrl,

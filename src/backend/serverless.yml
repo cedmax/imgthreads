@@ -4,8 +4,12 @@ service: imgthreads
 
 provider:
   name: aws
+  stage: ${opt:stage, 'dev'}
   region: eu-west-1
   runtime: nodejs12.x
+  environment:
+    ENV: ${self:provider.stage}
+
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -14,18 +18,18 @@ provider:
         - 's3:getObject'
         - 's3:PutObjectAcl'
       Resource:
-        - 'arn:aws:s3:::${file(./config.json):bucket}-uploads'
-        - 'arn:aws:s3:::${file(./config.json):bucket}-uploads/*'
-        - 'arn:aws:s3:::${file(./config.json):bucket}'
-        - 'arn:aws:s3:::${file(./config.json):bucket}/*'
+        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}-uploads'
+        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}-uploads/*'
+        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}'
+        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}/*'
     - Effect: Allow
       Action:
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: arn:aws:dynamodb:*:*:table/${file(./config.json):dynamoTable}
+      Resource: arn:aws:dynamodb:*:*:table/${file(./config.${self:provider.stage}.json):dynamoTable}
   s3:
     uploadBucket:
-      name: ${file(./config.json):bucket}-uploads
+      name: ${file(./config.${self:provider.stage}.json):bucket}-uploads
       AccessControl: BucketOwnerFullControl
       CorsConfiguration:
         CorsRules:
@@ -33,7 +37,7 @@ provider:
             AllowedMethods: [GET, PUT]
             AllowedOrigins: ['*']
     destinationBucket:
-      name: ${file(./config.json):bucket}
+      name: ${file(./config.${self:provider.stage}.json):bucket}
       AccessControl: PublicRead
       CorsConfiguration:
         CorsRules:
@@ -70,7 +74,7 @@ resources:
     DynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${file(./config.json):dynamoTable}
+        TableName: ${file(./config.${self:provider.stage}.json):dynamoTable}
         AttributeDefinitions:
           - AttributeName: Id
             AttributeType: S

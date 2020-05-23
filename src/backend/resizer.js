@@ -3,7 +3,7 @@
 const AWS = require('aws-sdk')
 const gm = require('gm')
 const { parseEvent, readFile, writeFile } = require('./helpers')
-const { bucket } = require('./config.json')
+const { bucket } = require(`./config.${process.env.ENV}.json`)
 const size = [1536, 1536]
 
 const s3 = new AWS.S3()

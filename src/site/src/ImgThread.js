@@ -1,13 +1,13 @@
 import React, { memo, useState, useEffect } from 'react'
 import { useList } from 'react-firebase-hooks/database'
 import firebase from 'firebase/app'
+import { databaseURL, databasePath, imgBaseURL } from './config'
 import 'firebase/database'
 
 import AddImage from './components/AddImage'
 
-const baseUrl = 'https://img-threads.s3-eu-west-1.amazonaws.com/'
 firebase.initializeApp({
-  databaseURL: 'https://ifeeltired.firebaseio.com',
+  databaseURL,
 })
 
 const H = ({ level, children }) => {
@@ -47,7 +47,7 @@ const Block = memo(
           }}
           alt={v.comment}
           key={v.key}
-          src={`${baseUrl}${v.file}`}
+          src={`${imgBaseURL}${v.file}`}
         />
         <H level={isParent ? 2 : 4}>{v.comment}</H>
       </div>
@@ -56,7 +56,7 @@ const Block = memo(
 
 export default memo(({ id, browserId }) => {
   const [values, loading, error] = useList(
-    firebase.database().ref(`/${id}`).orderByChild('timestamp')
+    firebase.database().ref(`/${databasePath}/${id}`).orderByChild('timestamp')
   )
 
   useEffect(() => {

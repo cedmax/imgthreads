@@ -1,6 +1,5 @@
 import Holmes from 'holmes-js'
-
-const apiBaseURL = 'https://2ma8kd6n34.execute-api.eu-west-1.amazonaws.com/dev'
+import { lambdaURL } from './config'
 
 const readFileBuffer = async file =>
   new Promise(resolve => {
@@ -21,7 +20,7 @@ const readDataURL = async file =>
   })
 
 const getUploadUrl = async ({ file, comment, parent }) =>
-  fetch(apiBaseURL + '/upload', {
+  fetch(lambdaURL, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
