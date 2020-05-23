@@ -30,8 +30,14 @@ export default ({ onImageUpload, keepOpen }) => {
       new Contrast(),
     ])
     if (keepOpen) {
+      let shouldBeOpen = true
       uppload.current.on('close', () => {
-        uppload.current.open()
+        if (shouldBeOpen) {
+          uppload.current.open()
+        }
+      })
+      uppload.current.on('upload', () => {
+        shouldBeOpen = false
       })
     }
     uppload.current.open()
