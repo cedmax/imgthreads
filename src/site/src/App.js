@@ -1,30 +1,26 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { useRoutes } from 'hookrouter'
 import ImgThread from './ImgThread'
+import Home from './pages/Home'
 
 const routes = {
-  '/': () => () => (
-    <header className="App-header">
-      <p>
-        Edit <code>src/App.js</code> and save to reload.
-      </p>
-      <a
-        className="App-link"
-        href="https://reactjs.org"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        Learn React
-      </a>
-    </header>
-  ),
-  '/:id': ({ id }) => <ImgThread id={id} />,
+  '/': () => browserId => <Home browserId={browserId} />,
+  '/:id': ({ id }) => browserId => <ImgThread browserId={browserId} id={id} />,
 }
 
-function App() {
+function App({ browserId }) {
   const routeResult = useRoutes(routes)
 
-  return routeResult || <div>404</div>
+  return (
+    <Fragment>
+      <header>
+        <a style={{ textDecoration: 'none' }} href="/">
+          &lt;Img /&gt;Threads
+        </a>
+      </header>
+      <main>{(routeResult && routeResult(browserId)) || <div>404</div>}</main>
+    </Fragment>
+  )
 }
 
 export default App

@@ -1,36 +1,112 @@
-import React, { memo } from 'react'
+import React, { memo, useState, useEffect } from 'react'
 import { useList } from 'react-firebase-hooks/database'
-import firebase from 'firebase'
+import firebase from 'firebase/app'
+import 'firebase/database'
 
-const baseUrl = 'http://img-threads.s3-eu-west-1.amazonaws.com/'
+import AddImage from './components/AddImage'
+
+const baseUrl = 'https://img-threads.s3-eu-west-1.amazonaws.com/'
 firebase.initializeApp({
   databaseURL: 'https://ifeeltired.firebaseio.com',
 })
 
-export default memo(({ id }) => {
+const H = ({ level, children }) => {
+  const H = `h${level}`
+  return <H>{children}</H>
+}
+
+let sendingId = null
+
+const blockStyle = {
+  border: '1px dashed var(--nc-bg-3)',
+  padding: '2rem',
+  margin: '0 auto 1rem',
+  display: 'table',
+}
+
+const parentOverrides = {
+  border: '',
+  padding: '',
+  margin: '0 0 1rem',
+}
+
+const Block = memo(
+  ({ v, isParent, browserId }) =>
+    !v.disabled && (
+      <div
+        style={{
+          ...blockStyle,
+          ...(isParent ? parentOverrides : {}),
+          ...(browserId === v.browserId ? { background: '#fafafa' } : {}),
+        }}
+      >
+        <img
+          style={{
+            width: isParent ? 'auto' : '400px',
+            maxWidth: '100%',
+          }}
+          alt={v.comment}
+          key={v.key}
+          src={`${baseUrl}${v.file}`}
+        />
+        <H level={isParent ? 2 : 4}>{v.comment}</H>
+      </div>
+    )
+)
+
+export default memo(({ id, browserId }) => {
   const [values, loading, error] = useList(
     firebase.database().ref(`/${id}`).orderByChild('timestamp')
   )
+
+  useEffect(() => {
+    if (!loading && values.length === 0) {
+      window.location.href = '/'
+    }
+  }, [values, loading])
+
+  useEffect(() => {
+    if (values.find(v => v.val().id === sendingId)) {
+      setIsUploading(false)
+      sendingId = null
+    }
+  }, [values])
+
+  const [isUploading, setIsUploading] = useState(false)
   return (
-    <div>
-      <p>
-        {error && <strong>Error: {error}</strong>}
-        {loading && <span>List: Loading...</span>}
-        {!loading && values && (
-          <React.Fragment>
-            <span>
-              List:{' '}
-              {values.map(v => (
-                <img
-                  key={v.key}
-                  width={100}
-                  src={`${baseUrl}${v.val().file.replace('r/', 't/')}`}
-                />
-              ))}
-            </span>
-          </React.Fragment>
-        )}
-      </p>
-    </div>
+    <>
+      {error && <strong>Error: {error}</strong>}
+      {loading && <span>Loading...</span>}
+      {values.length > 0 &&
+        values.map((v, i) => (
+          <Block
+            browserId={browserId}
+            isParent={i === 0}
+            key={v.val().timestamp}
+            v={v.val()}
+          />
+        ))}
+      {isUploading ? (
+        <div style={blockStyle}>
+          <AddImage
+            browserId={browserId}
+            removeForm={false}
+            parent={id}
+            onUploadSuccessful={id => (sendingId = id)}
+          />
+        </div>
+      ) : (
+        !loading &&
+        values.length > 0 && (
+          <div style={{ ...blockStyle, border: '' }}>
+            <input
+              type="button"
+              value="reply"
+              onClick={() => setIsUploading(true)}
+            />
+          </div>
+        )
+      )}
+    </>
   )
 })

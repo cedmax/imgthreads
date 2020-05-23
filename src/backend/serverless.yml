@@ -14,13 +14,18 @@ provider:
         - 's3:getObject'
         - 's3:PutObjectAcl'
       Resource:
-        - 'arn:aws:s3:::img-threads-uploads'
-        - 'arn:aws:s3:::img-threads-uploads/*'
-        - 'arn:aws:s3:::img-threads'
-        - 'arn:aws:s3:::img-threads/*'
+        - 'arn:aws:s3:::${file(./config.json):bucket}-uploads'
+        - 'arn:aws:s3:::${file(./config.json):bucket}-uploads/*'
+        - 'arn:aws:s3:::${file(./config.json):bucket}'
+        - 'arn:aws:s3:::${file(./config.json):bucket}/*'
+    - Effect: Allow
+      Action:
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+      Resource: arn:aws:dynamodb:*:*:table/${file(./config.json):dynamoTable}
   s3:
     uploadBucket:
-      name: img-threads-uploads
+      name: ${file(./config.json):bucket}-uploads
       AccessControl: BucketOwnerFullControl
       CorsConfiguration:
         CorsRules:
@@ -28,7 +33,7 @@ provider:
             AllowedMethods: [GET, PUT]
             AllowedOrigins: ['*']
     destinationBucket:
-      name: img-threads
+      name: ${file(./config.json):bucket}
       AccessControl: PublicRead
       CorsConfiguration:
         CorsRules:
@@ -60,3 +65,18 @@ functions:
           event: s3:ObjectCreated:*
           rules:
             - prefix: r/
+resources:
+  Resources:
+    DynamoDbTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${file(./config.json):dynamoTable}
+        AttributeDefinitions:
+          - AttributeName: Id
+            AttributeType: S
+        KeySchema:
+          - AttributeName: Id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1

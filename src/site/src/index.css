@@ -1,0 +1,12 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  --nc-bg-2: #fff;
+}
+
+.uppload-close {
+  display: none;
+}

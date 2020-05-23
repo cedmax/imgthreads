@@ -1,8 +1,11 @@
 'use strict'
+const AWS = require('aws-sdk')
 const admin = require('firebase-admin')
 const { databaseURL } = require('./config.json')
-const { parseEvent } = require('./helpers')
-var serviceAccount = require('./serviceAccountKey.json')
+const { parseEvent, readComment } = require('./helpers')
+const serviceAccount = require('./serviceAccountKey.json')
+
+const dynamodb = new AWS.DynamoDB()
 
 const initializeDb = () =>
   admin.initializeApp({
@@ -14,10 +17,21 @@ const fileToDbPath = file => {
   const fileParts = file.split(/[./]/g)
   const isParent = fileParts.length < 4
 
-  return `/${fileParts[1]}/${isParent ? fileParts[1] : fileParts[2]}/files`
+  return `/${fileParts[1]}/${isParent ? fileParts[1] : fileParts[2]}`
+}
+const fileToId = file => {
+  const fileParts = file.split(/[./]/g)
+  const isParent = fileParts.length < 4
+
+  return isParent ? fileParts[1] : fileParts[2]
 }
 
-module.exports.handler = (event, context, callback) => {
+const setAysnc = (ref, payload) =>
+  new Promise(resolve => {
+    ref.set(payload, resolve)
+  })
+
+module.exports.handler = async (event, context, callback) => {
   const { file } = parseEvent(event)
 
   const firebase = initializeDb()
@@ -25,16 +39,16 @@ module.exports.handler = (event, context, callback) => {
 
   const ref = db.ref(fileToDbPath(file))
 
-  ref.set(
-    {
-      file,
-      timestamp: Date.now(),
-    },
-    () => {
-      firebase.delete()
-      callback(null, {
-        statusCode: 200,
-      })
-    }
-  )
+  const id = fileToId(file)
+  const comment = await readComment(dynamodb, id)
+
+  await setAysnc(ref, {
+    file,
+    comment,
+    id,
+    timestamp: Date.now(),
+  })
+
+  firebase.delete()
+  return null
 }

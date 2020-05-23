@@ -1,5 +1,5 @@
 {
-  "uploadBucket": "img-threads-uploads",
-  "destBucket": "img-threads",
-  "databaseURL": "https://ifeeltired.firebaseio.com"
+  "bucket": "img-threads",
+  "databaseURL": "https://ifeeltired.firebaseio.com",
+  "dynamoTable": "caption"
 }

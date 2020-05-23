@@ -4,8 +4,8 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "deploy:be": "lerna run --stream --scope backend deploy",
-    "deploy:fe": "lerna run --scope site deploy",
-    "start": "lerna run --stream --scope site start",
+    "start:fe": "lerna run --scope site start",
+    "build:fe": "lerna run --scope site build",
     "lint": "lerna run lint --"
   },
   "devDependencies": {
