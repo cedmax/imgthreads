@@ -18,8 +18,6 @@ provider:
         - 's3:getObject'
         - 's3:PutObjectAcl'
       Resource:
-        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}-uploads'
-        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}-uploads/*'
         - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}'
         - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}/*'
     - Effect: Allow
@@ -28,14 +26,6 @@ provider:
         - dynamodb:PutItem
       Resource: arn:aws:dynamodb:*:*:table/${file(./config.${self:provider.stage}.json):dynamoTable}
   s3:
-    uploadBucket:
-      name: ${file(./config.${self:provider.stage}.json):bucket}-uploads
-      AccessControl: BucketOwnerFullControl
-      CorsConfiguration:
-        CorsRules:
-          - AllowedHeaders: ['*']
-            AllowedMethods: [GET, PUT]
-            AllowedOrigins: ['*']
     destinationBucket:
       name: ${file(./config.${self:provider.stage}.json):bucket}
       AccessControl: PublicRead
@@ -53,22 +43,14 @@ functions:
           path: upload
           method: post
           cors: true
-  resize:
-    handler: resizer.handler
+  handler:
+    handler: handler.handler
     layers:
       - arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2
     events:
       - s3:
-          bucket: uploadBucket
-          event: s3:ObjectCreated:*
-  associate:
-    handler: firebase.handler
-    events:
-      - s3:
           bucket: destinationBucket
           event: s3:ObjectCreated:*
-          rules:
-            - prefix: r/
 resources:
   Resources:
     DynamoDbTable:
