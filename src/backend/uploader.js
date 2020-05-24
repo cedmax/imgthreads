@@ -11,7 +11,7 @@ const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
 
-const dynamodb = new AWS.DynamoDB()
+const dynamodb = new AWS.DynamoDB.DocumentClient()
 
 module.exports.handler = async event => {
   const { name, type: ContentType, parent, caption, browserId } = JSON.parse(

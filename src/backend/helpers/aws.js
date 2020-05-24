@@ -29,17 +29,12 @@ module.exports.writeFile = (s3, Bucket, config) =>
 
 module.exports.writeMeta = (db, { id, caption, browserId }) =>
   db
-    .putItem({
+    .put({
       Item: {
-        Id: {
-          S: id,
-        },
-        Caption: {
-          S: caption,
-        },
-        BrowserId: {
-          S: browserId,
-        },
+        Id: id,
+        Caption: caption,
+        BrowserId: browserId,
+        TimeStamp: Date.now(),
       },
       TableName,
     })
@@ -47,20 +42,17 @@ module.exports.writeMeta = (db, { id, caption, browserId }) =>
 
 module.exports.readMeta = async (db, id) => {
   const data = await db
-    .getItem({
+    .get({
       Key: {
-        Id: {
-          S: id,
-        },
+        Id: id,
       },
       TableName,
     })
     .promise()
 
   return {
-    caption:
-      (data && data.Item && data.Item.Caption && data.Item.Caption.S) || '',
-    browserId:
-      (data && data.Item && data.Item.BrowserId && data.Item.BrowserId.S) || '',
+    caption: (data && data.Item && data.Item.Caption) || '',
+    browserId: data && data.Item && data.Item.BrowserId,
+    timestamp: data && data.Item && data.Item.TimeStamp,
   }
 }
