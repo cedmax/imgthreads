@@ -27,22 +27,25 @@ module.exports.writeFile = (s3, Bucket, config) =>
     })
     .promise()
 
-module.exports.writeComment = (db, id, comment) =>
+module.exports.writeMeta = (db, { id, caption, browserId }) =>
   db
     .putItem({
       Item: {
         Id: {
           S: id,
         },
-        Comment: {
-          S: comment,
+        Caption: {
+          S: caption,
+        },
+        BrowserId: {
+          S: browserId,
         },
       },
       TableName,
     })
     .promise()
 
-module.exports.readComment = async (db, id) => {
+module.exports.readMeta = async (db, id) => {
   const data = await db
     .getItem({
       Key: {
@@ -54,5 +57,10 @@ module.exports.readComment = async (db, id) => {
     })
     .promise()
 
-  return (data && data.Item && data.Item.Comment && data.Item.Comment.S) || ''
+  return {
+    caption:
+      (data && data.Item && data.Item.Caption && data.Item.Caption.S) || '',
+    browserId:
+      (data && data.Item && data.Item.BrowserId && data.Item.BrowserId.S) || '',
+  }
 }

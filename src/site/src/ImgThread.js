@@ -37,7 +37,7 @@ const Block = memo(
         style={{
           ...blockStyle,
           ...(isParent ? parentOverrides : {}),
-          ...(browserId === v.browserId ? { background: '#fafafa' } : {}),
+          ...(browserId === v.browserId ? { background: '#f5faff' } : {}),
         }}
       >
         <img
@@ -45,11 +45,11 @@ const Block = memo(
             width: isParent ? 'auto' : '400px',
             maxWidth: '100%',
           }}
-          alt={v.comment}
+          alt={v.caption}
           key={v.key}
           src={`${imgBaseURL}${v.file}`}
         />
-        <H level={isParent ? 2 : 4}>{v.comment}</H>
+        <H level={isParent ? 2 : 4}>{v.caption}</H>
       </div>
     )
 )

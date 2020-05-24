@@ -2,7 +2,7 @@
 const AWS = require('aws-sdk')
 const uuid = require('uuid').v4
 const { bucket, corsDomain } = require(`./config.${process.env.ENV}.json`)
-const { writeComment } = require('./helpers')
+const { writeMeta } = require('./helpers')
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
@@ -11,13 +11,13 @@ const s3 = new AWS.S3({
 const dynamodb = new AWS.DynamoDB()
 
 module.exports.handler = async event => {
-  const { name, type: ContentType, parent, comment } = JSON.parse(event.body)
+  const { name, type: ContentType, parent, caption, browserId } = JSON.parse(
+    event.body
+  )
 
   const id = uuid()
 
-  if (comment) {
-    await writeComment(dynamodb, id, comment)
-  }
+  await writeMeta(dynamodb, { id, caption: caption || '', browserId })
 
   const uploadUrl = await s3.getSignedUrl('putObject', {
     Bucket: `${bucket}-uploads`,

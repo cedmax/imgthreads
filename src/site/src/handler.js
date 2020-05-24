@@ -19,7 +19,7 @@ const readDataURL = async file =>
     reader.readAsDataURL(file)
   })
 
-const getUploadUrl = async ({ file, comment, parent }) =>
+export const getUploadUrl = async ({ file, caption, parent, browserId }) =>
   fetch(lambdaURL, {
     method: 'POST',
     headers: {
@@ -28,7 +28,8 @@ const getUploadUrl = async ({ file, comment, parent }) =>
     body: JSON.stringify({
       name: file.name,
       type: file.type,
-      comment,
+      caption,
+      browserId,
       parent,
     }),
   }).then(response => response.json())
@@ -42,19 +43,6 @@ export const fileReader = async file => {
   return {
     buffer,
     dataUrl,
-  }
-}
-
-export const handleImage = async ({ file, comment, parent }) => {
-  const { uploadUrl, id } = await getUploadUrl({
-    file,
-    comment,
-    parent,
-  })
-
-  return {
-    uploadUrl,
-    id,
   }
 }
 

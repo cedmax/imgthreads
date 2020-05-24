@@ -1,22 +1,22 @@
 import React, { useCallback, useState } from 'react'
-import Title from './Title'
+import Caption from './Caption'
 
 export default ({ onSubmit }) => {
-  const [title, setTitle] = useState('')
+  const [caption, setCaption] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const sumbit = useCallback(
     e => {
       e.preventDefault()
       setIsSubmitting(true)
-      onSubmit(title)
+      onSubmit(caption)
     },
-    [title, onSubmit]
+    [caption, onSubmit]
   )
 
   return (
     <form onSubmit={onSubmit}>
-      <Title value={title} onChange={setTitle} />
+      <Caption value={caption} onChange={setCaption} disabled={isSubmitting} />
       <input
         onClick={sumbit}
         type="submit"

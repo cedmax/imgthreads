@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 
-export default ({ onChange, value }) => {
+export default ({ onChange, value, disabled }) => {
   const change = useCallback(
     e => {
       onChange(e.target.value)
@@ -9,8 +9,9 @@ export default ({ onChange, value }) => {
   )
   return (
     <label htmlFor="title">
-      Title:
+      Caption:
       <input
+        disabled={disabled}
         onChange={change}
         value={value}
         name="title"

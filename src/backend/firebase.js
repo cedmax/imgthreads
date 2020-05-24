@@ -2,7 +2,7 @@
 
 const AWS = require('aws-sdk')
 const admin = require('firebase-admin')
-const { parseEvent, readComment } = require('./helpers')
+const { parseEvent, readMeta } = require('./helpers')
 const serviceAccount = require('./serviceAccountKey.json')
 const {
   databaseURL,
@@ -46,11 +46,12 @@ module.exports.handler = async (event, context, callback) => {
   const ref = db.ref(fileToDbPath(file))
 
   const id = fileToId(file)
-  const comment = await readComment(dynamodb, id)
+  const { caption, browserId } = await readMeta(dynamodb, id)
 
   await setAysnc(ref, {
     file,
-    comment,
+    caption,
+    browserId,
     id,
     timestamp: Date.now(),
   })

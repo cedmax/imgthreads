@@ -2,7 +2,7 @@ import React, { memo, Fragment, useState, useCallback } from 'react'
 import Form from '../components/Form'
 import Uploader from '../components/Uploader'
 
-import { fileReader, uploader, handleImage } from '../handler'
+import { fileReader, uploader, getUploadUrl } from '../handler'
 
 const scrollTo = id => {
   const yourElement = document.getElementsByName(id)
@@ -12,9 +12,9 @@ const scrollTo = id => {
 }
 
 export default memo(
-  ({ onUploadSuccessful, parent, removeForm = true, keepOpen }) => {
+  ({ onUploadSuccessful, parent, removeForm = true, keepOpen, browserId }) => {
     const [imgData, setImgData] = useState({})
-    const [comment, setComment] = useState(null)
+    const [caption, setCaption] = useState(null)
 
     const onImageUpload = useCallback(async file => {
       if (file) {
@@ -27,30 +27,31 @@ export default memo(
     }, [])
 
     const onSubmit = useCallback(
-      async comment => {
+      async caption => {
         const { buffer, file } = imgData
-        const { uploadUrl, id } = await handleImage({
+        const { uploadUrl, id } = await getUploadUrl({
+          browserId,
           file,
-          comment,
+          caption,
           parent,
         })
         await uploader(uploadUrl, { file, buffer })
-        setComment(comment)
+        setCaption(caption)
         onUploadSuccessful(id)
       },
-      [imgData, parent, onUploadSuccessful]
+      [imgData, parent, onUploadSuccessful, browserId]
     )
 
     return (
       <Fragment>
         {imgData.dataUrl ? (
           <Fragment>
-            <img alt={comment} src={imgData.dataUrl} />
+            <img alt={caption} src={imgData.dataUrl} />
             {removeForm ? (
-              comment === null ? (
+              caption === null ? (
                 <Form onSubmit={onSubmit} />
               ) : (
-                <h2>{comment}</h2>
+                <h2>{caption}</h2>
               )
             ) : (
               <Form onSubmit={onSubmit} />
