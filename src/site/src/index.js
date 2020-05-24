@@ -9,7 +9,7 @@ import './index.css'
 
   ReactDOM.render(
     <React.StrictMode>
-      <App browserId={`${browserId || ''}`} />
+      <App browserId={browserId} />
     </React.StrictMode>,
     document.getElementById('root')
   )
