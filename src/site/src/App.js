@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react'
 import { useRoutes } from 'hookrouter'
-import ImgThread from './ImgThread'
+import ImgThread from './pages/ImgThread'
 import Home from './pages/Home'
 
 const routes = {
@@ -14,9 +14,7 @@ function App({ browserId }) {
   return (
     <Fragment>
       <header>
-        <a style={{ textDecoration: 'none' }} href="/">
-          &lt;Img /&gt;Threads
-        </a>
+        <a href="/">&lt;Img /&gt;Threads</a>
       </header>
       <main>{(routeResult && routeResult(browserId)) || <div>404</div>}</main>
     </Fragment>

@@ -19,6 +19,7 @@
   "scripts": {
     "start": "REACT_APP_ENV=dev react-scripts start",
     "build": "REACT_APP_ENV=prod react-scripts build",
+    "lint": "eslint src",
     "deploy": "yarn build && netlify deploy --dir=build"
   },
   "eslintConfig": {

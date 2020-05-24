@@ -12,7 +12,7 @@ const scrollTo = id => {
 }
 
 export default memo(
-  ({ onUploadSuccessful, parent, removeForm = true, keepOpen, browserId }) => {
+  ({ onUploadSuccessful, parent, removeForm = true, browserId }) => {
     const [imgData, setImgData] = useState({})
     const [caption, setCaption] = useState(null)
 
@@ -21,7 +21,7 @@ export default memo(
         const imgData = await fileReader(file)
         setImgData({ ...imgData, file })
         setTimeout(() => {
-          scrollTo('title')
+          scrollTo('caption')
         }, 200)
       }
     }, [])
@@ -58,7 +58,7 @@ export default memo(
             )}
           </Fragment>
         ) : (
-          <Uploader keepOpen={keepOpen} onImageUpload={onImageUpload} />
+          <Uploader onImageUpload={onImageUpload} />
         )}
       </Fragment>
     )

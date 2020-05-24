@@ -4,9 +4,62 @@ h3,
 h4,
 h5,
 h6 {
-  --nc-bg-2: #fff;
+  --nc-bg-2: rgba(0, 0, 0, 0);
+}
+
+img {
+  margin: 0;
+}
+
+header a {
+  text-decoration: none;
 }
 
 .uppload-close {
   display: none;
+}
+
+uppload-modal section {
+  margin-bottom: 0;
+}
+
+.block {
+  border: 1px dashed var(--nc-bg-3);
+  padding: 2rem;
+  margin: 0 0 1rem 5%;
+  display: table;
+}
+
+.block:last-of-type {
+  margin-bottom: 5rem;
+}
+
+.block:empty {
+  border: 0;
+}
+
+.block--borderless {
+  border: 0;
+  padding: 1rem;
+  margin: 0 -1rem 1rem;
+  width: 100%;
+}
+
+.block img {
+  width: 400px;
+  max-width: 100%;
+}
+
+.block--borderless img {
+  width: auto;
+}
+
+.block--borderless input {
+  margin: 0 auto;
+  display: block;
+}
+
+input[name='caption'] {
+  width: 100%;
+  font-size: 200%;
 }

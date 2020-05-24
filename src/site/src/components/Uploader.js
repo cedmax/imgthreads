@@ -12,7 +12,7 @@ import {
 import 'uppload/dist/uppload.css'
 import 'uppload/dist/themes/light.css'
 
-export default ({ onImageUpload, keepOpen }) => {
+export default ({ onImageUpload }) => {
   const uppload = useRef()
   useEffect(() => {
     uppload.current = new Uppload({
@@ -29,19 +29,17 @@ export default ({ onImageUpload, keepOpen }) => {
       new Brightness(),
       new Contrast(),
     ])
-    if (keepOpen) {
-      let shouldBeOpen = true
-      uppload.current.on('close', () => {
-        if (shouldBeOpen) {
-          uppload.current.open()
-        }
-      })
-      uppload.current.on('upload', () => {
-        shouldBeOpen = false
-      })
-    }
+    let shouldBeOpen = true
+    uppload.current.on('close', () => {
+      if (shouldBeOpen) {
+        uppload.current.open()
+      }
+    })
+    uppload.current.on('upload', () => {
+      shouldBeOpen = false
+    })
     uppload.current.open()
-  }, [onImageUpload, keepOpen])
+  }, [onImageUpload])
 
   return null
 }

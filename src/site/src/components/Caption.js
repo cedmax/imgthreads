@@ -8,15 +8,14 @@ export default ({ onChange, value, disabled }) => {
     [onChange]
   )
   return (
-    <label htmlFor="title">
+    <label htmlFor="caption">
       Caption:
       <input
         disabled={disabled}
         onChange={change}
         value={value}
-        name="title"
+        name="caption"
         type="text"
-        style={{ width: '100%', fontSize: '200%' }}
       />
       <br />
     </label>
