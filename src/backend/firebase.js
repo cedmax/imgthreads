@@ -37,7 +37,7 @@ const setAysnc = (ref, payload) =>
     ref.set(payload, resolve)
   })
 
-module.exports.handler = async (event, context, callback) => {
+module.exports.handler = async event => {
   const { file } = parseEvent(event)
 
   const firebase = initializeDb()

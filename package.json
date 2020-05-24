@@ -3,9 +3,9 @@
   "private": true,
   "scripts": {
     "postinstall": "lerna bootstrap",
-    "deploy:be": "lerna run --stream --scope backend deploy",
-    "start:fe": "lerna run --scope site start",
-    "build:fe": "lerna run --scope site build",
+    "deploy:dev": "lerna run --stream deploy:dev",
+    "deploy:prod": "lerna run --stream deploy:prod",
+    "start": "lerna run --scope site start",
     "lint": "lerna run lint --"
   },
   "devDependencies": {
@@ -21,7 +21,8 @@
   },
   "lint-staged": {
     "*.js": [
-      "prettier --write"
+      "prettier --write",
+      "yarn lint"
     ]
   }
 }

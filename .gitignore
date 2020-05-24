@@ -5,3 +5,5 @@ jspm_packages
 # Serverless directories
 **/*.serverless
 **/serviceAccountKey.json
+# Local Netlify folder
+.netlify

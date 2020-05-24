@@ -4,7 +4,8 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
-    "deploy": "serverless deploy",
+    "deploy:prod": "serverless deploy --stage prod",
+    "deploy:dev": "serverless deploy --stage dev",
     "lint": "eslint \"*.js\""
   },
   "dependencies": {
@@ -14,6 +15,8 @@
     "uuid": "8.1.0"
   },
   "devDependencies": {
+    "eslint": "^7.1.0",
+    "eslint-config-prettier": "^6.11.0",
     "serverless": "1.71.3"
   }
 }
