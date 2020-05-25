@@ -6,7 +6,7 @@ const config = {
   },
   dev: {
     lambdaURL:
-      'https://2ma8kd6n34.execute-api.eu-west-1.amazonaws.com/dev/upload',
+      'https://un314j0ci9.execute-api.eu-west-1.amazonaws.com/dev/upload',
     imgBaseURL: 'https://img-threads-dev.s3-eu-west-1.amazonaws.com/',
   },
   prod: {
