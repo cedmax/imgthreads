@@ -4,7 +4,6 @@
   "scripts": {
     "postinstall": "lerna bootstrap",
     "deploy:dev": "lerna run --stream deploy:dev",
-    "deploy:stage": "lerna run --stream deploy:stage",
     "deploy:prod": "lerna run --stream deploy:prod",
     "start": "lerna run --scope site start",
     "lint": "lerna run lint --"

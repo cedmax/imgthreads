@@ -21,7 +21,6 @@
     "build": "react-scripts build",
     "lint": "eslint src",
     "deploy:dev": "REACT_APP_ENV=dev yarn build && netlify deploy --dir build",
-    "deploy:stage": "REACT_APP_ENV=stage yarn build && netlify deploy --dir build",
     "deploy:prod": "REACT_APP_ENV=prod yarn build && netlify deploy --prod --dir build"
   },
   "eslintConfig": {

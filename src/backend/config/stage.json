@@ -1,6 +1,0 @@
-{
-  "bucket": "img-threads-stage",
-  "databaseURL": "https://ifeeltired.firebaseio.com",
-  "databasePath": "stage",
-  "dynamoTable": "captions-stage"
-}
