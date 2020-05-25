@@ -1,6 +1,5 @@
-const AWS = require('aws-sdk')
 const gm = require('gm')
-const { readFile, writeFile } = require('../helpers/aws')
+const { readFile, writeFile } = require('../helpers/aws/s3')
 
 const size = [1536, 1536]
 
@@ -15,13 +14,11 @@ function resize(data, size) {
   })
 }
 
-module.exports = async ({ bucket, file }) => {
-  const s3 = new AWS.S3()
-
-  const { Body, ContentType } = await readFile(s3, bucket, file)
+module.exports = async file => {
+  const { Body, ContentType } = await readFile(file)
   const resizedBody = await resize(Body, size)
 
-  await writeFile(s3, bucket, {
+  await writeFile({
     ACL: 'public-read',
     Key: file.replace('o/', 'r/'),
     Body: resizedBody,

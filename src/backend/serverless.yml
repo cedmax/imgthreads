@@ -21,13 +21,13 @@ provider:
         - 's3:getObject'
         - 's3:PutObjectAcl'
       Resource:
-        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}'
-        - 'arn:aws:s3:::${file(./config.${self:provider.stage}.json):bucket}/*'
+        - 'arn:aws:s3:::${file(./config/${self:provider.stage}.json):bucket}'
+        - 'arn:aws:s3:::${file(./config/${self:provider.stage}.json):bucket}/*'
     - Effect: Allow
       Action:
         - dynamodb:GetItem
         - dynamodb:PutItem
-      Resource: arn:aws:dynamodb:*:*:table/${file(./config.${self:provider.stage}.json):dynamoTable}
+      Resource: arn:aws:dynamodb:*:*:table/${file(./config/${self:provider.stage}.json):dynamoTable}
     - Effect: Allow
       Action:
         - kms:Encrypt
@@ -37,7 +37,7 @@ provider:
 
   s3:
     destinationBucket:
-      name: ${file(./config.${self:provider.stage}.json):bucket}
+      name: ${file(./config/${self:provider.stage}.json):bucket}
       AccessControl: PublicRead
       CorsConfiguration:
         CorsRules:
@@ -60,8 +60,8 @@ functions:
           path: upload
           method: delete
           cors: true
-  handler:
-    handler: handler.handler
+  process:
+    handler: process.handler
     layers:
       - arn:aws:lambda:eu-west-1:175033217214:layer:graphicsmagick:2
     events:
@@ -73,7 +73,7 @@ resources:
     DynamoDbTable:
       Type: AWS::DynamoDB::Table
       Properties:
-        TableName: ${file(./config.${self:provider.stage}.json):dynamoTable}
+        TableName: ${file(./config/${self:provider.stage}.json):dynamoTable}
         AttributeDefinitions:
           - AttributeName: Id
             AttributeType: S

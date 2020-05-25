@@ -6,7 +6,7 @@
   "scripts": {
     "deploy:prod": "serverless deploy --stage prod",
     "deploy:dev": "serverless deploy --stage dev",
-    "lint": "eslint \"*.js\""
+    "lint": "eslint \"**/*.js\""
   },
   "dependencies": {
     "aws-sdk": "2.682.0",

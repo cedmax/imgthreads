@@ -1,29 +1,16 @@
 'use strict'
 
-const { readMeta } = require('../helpers/aws')
-const {
-  initializeDb,
-  fileToDbPath,
-  fileToId,
-  setAysnc,
-} = require('../helpers/firebase')
+const { readMeta } = require('../helpers/aws/dynamo')
+const { set } = require('../helpers/firebase')
 
-module.exports = async file => {
-  const firebase = initializeDb()
-  const db = firebase.database()
-
-  const ref = db.ref(fileToDbPath(file))
-
-  const id = fileToId(file)
+module.exports = async (file, parent, id) => {
   const { caption, browserId, timestamp } = await readMeta(id)
 
-  await setAysnc(ref, {
+  await set(`/${parent}/${id}`, {
+    id,
     file,
     caption,
     browserId,
-    id,
     timestamp,
   })
-
-  firebase.delete()
 }
