@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect } from 'react'
 import { useList } from 'react-firebase-hooks/database'
 import firebase from 'firebase/app'
 import { databaseURL, databasePath, imgBaseURL } from './config'
+import Block from './components/Block'
 import 'firebase/database'
 
 import AddImage from './components/AddImage'
@@ -10,49 +11,7 @@ firebase.initializeApp({
   databaseURL,
 })
 
-const H = ({ level, children }) => {
-  const H = `h${level}`
-  return <H>{children}</H>
-}
-
 let sendingId = null
-
-const blockStyle = {
-  border: '1px dashed var(--nc-bg-3)',
-  padding: '2rem',
-  margin: '0 auto 1rem',
-  display: 'table',
-}
-
-const parentOverrides = {
-  border: '',
-  padding: '',
-  margin: '0 0 1rem',
-}
-
-const Block = memo(
-  ({ v, isParent, browserId }) =>
-    !v.disabled && (
-      <div
-        style={{
-          ...blockStyle,
-          ...(isParent ? parentOverrides : {}),
-          ...(browserId === v.browserId ? { background: '#f5faff' } : {}),
-        }}
-      >
-        <img
-          style={{
-            width: isParent ? 'auto' : '400px',
-            maxWidth: '100%',
-          }}
-          alt={v.caption}
-          key={v.key}
-          src={`${imgBaseURL}${v.file}`}
-        />
-        <H level={isParent ? 2 : 4}>{v.caption}</H>
-      </div>
-    )
-)
 
 export default memo(({ id, browserId }) => {
   const [values, loading, error] = useList(
@@ -87,7 +46,7 @@ export default memo(({ id, browserId }) => {
           />
         ))}
       {isUploading ? (
-        <div style={blockStyle}>
+        <div className="block">
           <AddImage
             browserId={browserId}
             removeForm={false}
@@ -98,7 +57,7 @@ export default memo(({ id, browserId }) => {
       ) : (
         !loading &&
         values.length > 0 && (
-          <div style={{ ...blockStyle, border: '' }}>
+          <div className="block block--borderless">
             <input
               type="button"
               value="reply"
