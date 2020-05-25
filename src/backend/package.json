@@ -17,6 +17,7 @@
   "devDependencies": {
     "eslint": "^7.1.0",
     "eslint-config-prettier": "^6.11.0",
-    "serverless": "1.71.3"
+    "serverless": "1.71.3",
+    "serverless-pseudo-parameters": "^2.5.0"
   }
 }

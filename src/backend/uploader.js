@@ -5,11 +5,12 @@ const {
   bucket: Bucket,
   corsDomain,
 } = require(`./config.${process.env.ENV}.json`)
-const { writeMeta } = require('./helpers/aws')
+const { writeMeta, encrypt, decrypt } = require('./helpers/aws')
 
 const s3 = new AWS.S3({
   signatureVersion: 'v4',
 })
+const kmsClient = new AWS.KMS({ region: 'eu-west-1' })
 
 const dynamodb = new AWS.DynamoDB.DocumentClient()
 
@@ -31,7 +32,11 @@ module.exports.handler = async event => {
   )
 
   const id = uuid()
-
+  console.log(browserId)
+  const owner = await encrypt(kmsClient, browserId)
+  console.log(owner)
+  const ownerDe = await decrypt(kmsClient, browserId)
+  console.log(ownerDe)
   await writeMeta(dynamodb, { id, caption: caption || '', browserId })
 
   const uploadUrl = await s3.getSignedUrl('putObject', {
@@ -48,6 +53,7 @@ module.exports.handler = async event => {
     },
     body: JSON.stringify({
       uploadUrl,
+      owner,
       id,
     }),
   }

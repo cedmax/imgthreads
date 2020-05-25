@@ -1,4 +1,9 @@
 const config = {
+  stage: {
+    lambdaURL:
+      'https://75pjlrszfi.execute-api.eu-west-1.amazonaws.com/stage/upload',
+    imgBaseURL: 'https://img-threads-stage.s3-eu-west-1.amazonaws.com/',
+  },
   dev: {
     lambdaURL:
       'https://2ma8kd6n34.execute-api.eu-west-1.amazonaws.com/dev/upload',
