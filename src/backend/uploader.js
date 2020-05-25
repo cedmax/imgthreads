@@ -13,7 +13,19 @@ const s3 = new AWS.S3({
 
 const dynamodb = new AWS.DynamoDB.DocumentClient()
 
+const dynamicCors = origin => {
+  if (
+    origin.endsWith(`imgthreads.netlify.app`) ||
+    origin.startsWith('http://localhost:')
+  ) {
+    return origin
+  }
+
+  return null
+}
+
 module.exports.handler = async event => {
+  const { origin } = event.headers
   const { name, type: ContentType, parent, caption, browserId } = JSON.parse(
     event.body
   )
@@ -32,7 +44,7 @@ module.exports.handler = async event => {
   return {
     statusCode: 200,
     headers: {
-      'Access-Control-Allow-Origin': corsDomain,
+      'Access-Control-Allow-Origin': corsDomain || dynamicCors(origin),
     },
     body: JSON.stringify({
       uploadUrl,
