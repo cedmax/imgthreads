@@ -1,4 +1,7 @@
+const AWS = require('aws-sdk')
 const { dynamoTable: TableName } = require(`../config.${process.env.ENV}.json`)
+
+const dynamodb = new AWS.DynamoDB.DocumentClient()
 
 module.exports.parseEvent = event => {
   const Record = event.Records[0]
@@ -27,22 +30,31 @@ module.exports.writeFile = (s3, Bucket, config) =>
     })
     .promise()
 
-module.exports.writeMeta = (db, { id, caption, browserId, owner }) =>
-  db
+module.exports.writeMeta = ({ id, caption, browserId, ownerCode }) =>
+  dynamodb
     .put({
       Item: {
         Id: id,
         Caption: caption,
         BrowserId: browserId,
         TimeStamp: Date.now(),
-        owner,
+        OwnerCode: ownerCode,
       },
       TableName,
     })
     .promise()
 
-module.exports.readMeta = async (db, id) => {
-  const data = await db
+module.exports.decrypt = async (kmsClient, encoded) => {
+  const paramsDecrypt = {
+    CiphertextBlob: Buffer.from(encoded, 'base64'),
+  }
+
+  const decryptResult = await kmsClient.decrypt(paramsDecrypt).promise()
+  return Buffer.from(decryptResult.Plaintext).toString()
+}
+
+module.exports.readMeta = async id => {
+  const data = await dynamodb
     .get({
       Key: {
         Id: id,
@@ -55,33 +67,16 @@ module.exports.readMeta = async (db, id) => {
     caption: (data && data.Item && data.Item.Caption) || '',
     browserId: data && data.Item && data.Item.BrowserId,
     timestamp: data && data.Item && data.Item.TimeStamp,
+    ownerCode: data && data.Item && data.Item.OwnerCode,
   }
 }
 
 module.exports.encrypt = async (kmsClient, text) => {
   const paramsEncrypt = {
     KeyId: process.env.KMSKeyId,
-    Plaintext: new Buffer(`${text}`),
+    Plaintext: `${text}`,
   }
 
   const encryptResult = await kmsClient.encrypt(paramsEncrypt).promise()
-  // The encrypted plaintext. When you use the HTTP API or the AWS CLI, the value is Base64-encoded. Otherwise, it is not encoded.
-  if (Buffer.isBuffer(encryptResult.CiphertextBlob)) {
-    return Buffer.from(encryptResult.CiphertextBlob).toString('base64')
-  } else {
-    throw new Error('Mayday Mayday')
-  }
-}
-
-module.exports.decrypt = async (kmsClient, encoded) => {
-  const paramsDecrypt = {
-    CiphertextBlob: Buffer.from(encoded, 'base64'),
-  }
-
-  const decryptResult = await kmsClient.decrypt(paramsDecrypt).promise()
-  if (Buffer.isBuffer(decryptResult.Plaintext)) {
-    return Buffer.from(decryptResult.Plaintext).toString()
-  } else {
-    throw new Error('We have a problem')
-  }
+  return Buffer.from(encryptResult.CiphertextBlob).toString('base64')
 }

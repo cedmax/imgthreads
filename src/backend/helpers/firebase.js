@@ -22,6 +22,8 @@ module.exports.fileToDbPath = file => {
   }`
 }
 
+module.exports.getPath = path => `/${databasePath}/${path}`
+
 module.exports.fileToId = file => {
   const fileParts = file.split(/[./]/g)
   const isParent = fileParts.length < 4

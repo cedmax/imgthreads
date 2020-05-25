@@ -53,6 +53,13 @@ functions:
           path: upload
           method: post
           cors: true
+  hide:
+    handler: hide.handler
+    events:
+      - http:
+          path: upload
+          method: delete
+          cors: true
   handler:
     handler: handler.handler
     layers:
