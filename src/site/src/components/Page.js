@@ -9,6 +9,14 @@ export default memo(({ id, browserId }) => {
 
   useEffect(() => setParentId(id), [id])
 
+  useEffect(() => {
+    if (!parentId) {
+      document.body.classList.add('home')
+    } else {
+      document.body.classList.remove('home')
+    }
+  }, [parentId])
+
   const onUploadSuccessful = useCallback(
     id => {
       setSendingId(id)

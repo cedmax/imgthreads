@@ -89,3 +89,7 @@ input[name='caption'] {
   max-width: 90vw !important;
   max-height: 90vh !important;
 }
+
+.home crate {
+  display: none;
+}
