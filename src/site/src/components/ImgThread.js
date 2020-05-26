@@ -44,7 +44,11 @@ export default memo(({ id, browserId, sendingId, onLoad }) => {
   return (
     <>
       {!values.length && <span>{message}</span>}
-      <BlockList values={values} ownerCode={ownerCode} browserId={browserId} />
+      <BlockList
+        values={values.filter(v => !v.disabled)}
+        ownerCode={ownerCode}
+        browserId={browserId}
+      />
     </>
   )
 })

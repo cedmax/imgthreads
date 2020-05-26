@@ -48,6 +48,7 @@ header a {
 .block img {
   width: 500px;
   max-width: 100%;
+  cursor: pointer;
 }
 
 .block--borderless img {
@@ -57,6 +58,10 @@ header a {
 .block--borderless input {
   margin: 0 auto;
   display: block;
+}
+
+.block--owner {
+  background: #f5faff;
 }
 
 input[name='caption'] {
@@ -74,4 +79,16 @@ input[name='caption'] {
 .actions {
   display: flex;
   flex-direction: row-reverse;
+}
+.react-images__blanket {
+  background-color: rgba(0, 0, 0, 0.9) !important;
+}
+
+.react-images__view-image {
+  max-width: 90vw !important;
+  max-height: 90vh !important;
+}
+
+.react-images__view {
+  background: white;
 }
