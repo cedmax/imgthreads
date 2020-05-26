@@ -8,7 +8,7 @@ export default ({ values, ownerCode, browserId }) =>
       ownerCode={ownerCode}
       browserId={browserId}
       isParent={i === 0}
-      key={v.val().timestamp}
-      v={v.val()}
+      key={v.timestamp}
+      v={v}
     />
   ))

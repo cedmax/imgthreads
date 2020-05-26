@@ -1,5 +1,5 @@
 import React, { useRef, memo, useState, useEffect } from 'react'
-import { useList } from 'react-firebase-hooks/database'
+import { useListVals } from 'react-firebase-hooks/database'
 import firebase from 'firebase/app'
 import { getOwnerCode } from '../helpers/identity'
 import { databaseURL, databasePath } from '../config'
@@ -14,7 +14,7 @@ export default memo(({ id, browserId, sendingId, onLoad }) => {
   const timeout = useRef(null)
   const [ownerCode, setOwnerCode] = useState(false)
   const [message, setMessage] = useState('Loading...')
-  const [values, loading] = useList(
+  const [values, loading] = useListVals(
     firebase.database().ref(`/${databasePath}/${id}`).orderByChild('timestamp')
   )
 
@@ -23,7 +23,7 @@ export default memo(({ id, browserId, sendingId, onLoad }) => {
 
     if (values.length) {
       clearTimeout(timeout.current)
-      setOwnerCode(getOwnerCode(values[0].val().id))
+      setOwnerCode(getOwnerCode(values[0].id))
     } else {
       setMessage('Wait for it...')
       timeout.current = setTimeout(() => {
@@ -36,7 +36,7 @@ export default memo(({ id, browserId, sendingId, onLoad }) => {
   }, [values, loading])
 
   useEffect(() => {
-    if (values.find(v => v.val().id === sendingId)) {
+    if (values.find(v => v.id === sendingId)) {
       onLoad()
     }
   }, [values, sendingId, onLoad])
