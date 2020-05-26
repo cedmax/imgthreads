@@ -22,7 +22,9 @@ export default ({ onImageUpload }) => {
     })
 
     uppload.current.use([
-      new Local(),
+      new Local({
+        mimeTypes: ['image/jpeg', 'image/jpg', 'image/png'],
+      }),
       new Crop({ hideAspectRatioSettings: true }),
       new Rotate(),
       new Flip(),

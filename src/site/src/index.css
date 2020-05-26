@@ -46,7 +46,7 @@ header a {
 }
 
 .block img {
-  width: 400px;
+  width: 500px;
   max-width: 100%;
 }
 
@@ -62,4 +62,16 @@ header a {
 input[name='caption'] {
   width: 100%;
   font-size: 200%;
+}
+
+.hide,
+.hide:hover {
+  background: none;
+  color: var(--nc-lk-1);
+  text-decoration: underline;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row-reverse;
 }

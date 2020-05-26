@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import Caption from './Caption'
 
-export default ({ onSubmit }) => {
+export default ({ onSubmit, onCancel }) => {
   const [caption, setCaption] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
 
@@ -14,15 +14,24 @@ export default ({ onSubmit }) => {
     [caption, onSubmit]
   )
 
+  const cancel = useCallback(() => onCancel(), [onCancel])
+
   return (
     <form onSubmit={onSubmit}>
       <Caption value={caption} onChange={setCaption} disabled={isSubmitting} />
-      <input
-        onClick={sumbit}
-        type="submit"
-        value="Send"
-        disabled={isSubmitting}
-      />
+      <div class="actions">
+        <button onClick={sumbit} type="submit" disabled={isSubmitting}>
+          Send
+        </button>
+        <button
+          onClick={cancel}
+          type="button"
+          className="hide"
+          disabled={isSubmitting}
+        >
+          cancel
+        </button>
+      </div>
     </form>
   )
 }

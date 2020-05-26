@@ -1,24 +1,23 @@
-import React, { Fragment } from 'react'
+import React, { Fragment, memo } from 'react'
 import { useRoutes } from 'hookrouter'
-import ImgThread from './pages/ImgThread'
-import Home from './pages/Home'
+import Page from './components/Page'
 
 const routes = {
-  '/': () => browserId => <Home browserId={browserId} />,
-  '/:id': ({ id }) => browserId => <ImgThread browserId={browserId} id={id} />,
+  '/:id?': ({ id }) =>
+    memo(({ browserId }) => <Page id={id} browserId={browserId} />),
 }
 
-function App({ browserId }) {
-  const routeResult = useRoutes(routes)
+export default memo(({ browserId }) => {
+  const RouteResult = useRoutes(routes)
 
   return (
     <Fragment>
       <header>
         <a href="/">&lt;Img /&gt;Threads</a>
       </header>
-      <main>{(routeResult && routeResult(browserId)) || <div>404</div>}</main>
+      <main>
+        {RouteResult ? <RouteResult browserId={browserId} /> : <div>404</div>}
+      </main>
     </Fragment>
   )
-}
-
-export default App
+})
