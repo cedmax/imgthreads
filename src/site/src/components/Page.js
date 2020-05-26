@@ -4,7 +4,6 @@ import ImgThread from './ImgThread'
 
 export default memo(({ id, browserId }) => {
   const [parentId, setParentId] = useState(id)
-  const [isLoaded, setIsLoaded] = useState(false)
   const [isUploading, setIsUploading] = useState(!id)
   const [sendingId, setSendingId] = useState(null)
 
@@ -22,9 +21,8 @@ export default memo(({ id, browserId }) => {
     [parentId]
   )
 
-  const onUploadAction = useCallback(() => setIsUploading(true), [])
+  const onUpload = useCallback(() => setIsUploading(true), [])
   const onLoad = useCallback(() => {
-    setIsLoaded(true)
     if (parentId) {
       setIsUploading(false)
       setSendingId(null)
@@ -35,6 +33,8 @@ export default memo(({ id, browserId }) => {
     <Fragment>
       {parentId && (
         <ImgThread
+          isUploading={isUploading}
+          onUpload={onUpload}
           id={parentId}
           browserId={browserId}
           onLoad={onLoad}
@@ -48,11 +48,6 @@ export default memo(({ id, browserId }) => {
           parent={parentId}
           onUploadSuccessful={onUploadSuccessful}
         />
-      )}
-      {isLoaded && !isUploading && (
-        <div className="block block--borderless">
-          <input type="button" value="reply" onClick={onUploadAction} />
-        </div>
       )}
     </Fragment>
   )

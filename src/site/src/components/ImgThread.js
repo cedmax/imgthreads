@@ -10,45 +10,55 @@ firebase.initializeApp({
   databaseURL,
 })
 
-export default memo(({ id, browserId, sendingId, onLoad }) => {
-  const timeout = useRef(null)
-  const [ownerCode, setOwnerCode] = useState(false)
-  const [message, setMessage] = useState('Loading...')
-  const [values, loading] = useListVals(
-    firebase.database().ref(`/${databasePath}/${id}`).orderByChild('timestamp')
-  )
+export default memo(
+  ({ id, browserId, sendingId, onLoad, onUpload, isUploading }) => {
+    const timeout = useRef(null)
+    const [ownerCode, setOwnerCode] = useState(false)
+    const [message, setMessage] = useState('Loading...')
+    const [values, loading] = useListVals(
+      firebase
+        .database()
+        .ref(`/${databasePath}/${id}`)
+        .orderByChild('timestamp')
+    )
 
-  useEffect(() => {
-    if (loading) return
+    useEffect(() => {
+      if (loading) return
 
-    if (values.length) {
-      clearTimeout(timeout.current)
-      setOwnerCode(getOwnerCode(values[0].id))
-    } else {
-      setMessage('Wait for it...')
-      timeout.current = setTimeout(() => {
-        setMessage('Mmm...')
+      if (values.length) {
+        clearTimeout(timeout.current)
+        setOwnerCode(getOwnerCode(values[0].id))
+      } else {
+        setMessage('Wait for it...')
         timeout.current = setTimeout(() => {
-          window.location.replace('/')
-        }, 3000)
-      }, 2000)
-    }
-  }, [values, loading])
+          setMessage('Mmm...')
+          timeout.current = setTimeout(() => {
+            window.location.replace('/')
+          }, 3000)
+        }, 2000)
+      }
+    }, [values, loading])
 
-  useEffect(() => {
-    if (values.find(v => v.id === sendingId)) {
-      onLoad()
-    }
-  }, [values, sendingId, onLoad])
+    useEffect(() => {
+      if (values.find(v => v.id === sendingId)) {
+        onLoad()
+      }
+    }, [values, sendingId, onLoad])
 
-  return (
-    <>
-      {!values.length && <span>{message}</span>}
-      <BlockList
-        values={values.filter(v => !v.disabled)}
-        ownerCode={ownerCode}
-        browserId={browserId}
-      />
-    </>
-  )
-})
+    return (
+      <>
+        {!values.length && <span>{message}</span>}
+        <BlockList
+          values={values.filter(v => !v.disabled)}
+          ownerCode={ownerCode}
+          browserId={browserId}
+        />
+        {!isUploading && !loading && (
+          <div className="block block--borderless">
+            <input type="button" value="reply" onClick={onUpload} />
+          </div>
+        )}
+      </>
+    )
+  }
+)
