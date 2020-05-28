@@ -34,8 +34,8 @@ export default memo(
           setMessage('Mmm...')
           timeout.current = setTimeout(() => {
             window.location.replace('/')
-          }, 3000)
-        }, 2000)
+          }, 9000)
+        }, 6000)
       }
     }, [values, loading])
 
