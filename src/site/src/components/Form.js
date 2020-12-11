@@ -19,7 +19,7 @@ export default ({ onSubmit, onCancel }) => {
   return (
     <form onSubmit={onSubmit}>
       <Caption value={caption} onChange={setCaption} disabled={isSubmitting} />
-      <div class="actions">
+      <div className="actions">
         <button onClick={sumbit} type="submit" disabled={isSubmitting}>
           Send
         </button>
