@@ -1,5 +1,5 @@
 const { readMeta } = require('../helpers/aws/dynamo')
-const { encrypt, decrypt } = require('../helpers/aws/kms')
+const { encrypt, decrypt } = require('./encrypter')
 
 module.exports.getOwnerCode = async ({ parent, browserId, id }) => {
   if (parent) {
