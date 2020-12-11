@@ -11,8 +11,6 @@ provider:
   runtime: nodejs12.x
   environment:
     ENV: ${self:provider.stage}
-    KMSKeyId:
-      Fn::GetAtt: [KMSKey, Arn]
   iamRoleStatements:
     - Effect: 'Allow'
       Action:
@@ -28,12 +26,6 @@ provider:
         - dynamodb:GetItem
         - dynamodb:PutItem
       Resource: arn:aws:dynamodb:*:*:table/${file(./config/${self:provider.stage}.json):dynamoTable}
-    - Effect: Allow
-      Action:
-        - kms:Encrypt
-        - kms:Decrypt
-      Resource:
-        Fn::GetAtt: [KMSKey, Arn]
 
   s3:
     destinationBucket:
@@ -83,15 +75,3 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-    KMSKey:
-      Type: AWS::KMS::Key
-      Properties:
-        Enabled: true
-        KeyPolicy:
-          Statement:
-            Effect: 'Allow'
-            Principal:
-              AWS: arn:aws:iam::#{AWS::AccountId}:root
-            Action:
-              - 'kms:*'
-            Resource: '*'
